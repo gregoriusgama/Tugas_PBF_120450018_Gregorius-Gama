@@ -1,0 +1,52 @@
+from solver import *
+from math import *
+import matplotlib.pyplot as plt
+
+g = 9.81                                    
+l = 1                                       
+k = 0                                       
+u0 = 0.5 * pi
+du0 = 0
+t0 = 0
+t_akhir = 4
+h = 0.01
+w0 = g/l
+
+def function(t,u,du):
+    return w0 * sin(u) -k*du
+
+res_euler_ = []
+res_eulercromer_ = []
+t = []
+step_ = int((t_akhir - t0) / h)
+
+for i in range(step_):
+    tm = (i + 1) * h
+    (u_nxt, du_nxt) = euler_(tm, h, u0, du0, function)
+    res_euler_.append(u_nxt)
+    t.append(tm)
+    u0 = u_nxt
+    du0 = du_nxt
+
+t = []
+u0 = 0.5 * pi
+du0 = 0
+d2u0 = function(t0,u0,du0)
+
+for i in range(step_):
+    tm = (i + 1) * h
+    (u_nxt, du_nxt) = euler_cromer_(tm, h, u0, du0, function)
+    res_eulercromer_.append(u_nxt)
+    t.append(tm)
+    u0 = u_nxt
+    du0 = du_nxt
+    
+    
+    plt.title('Non-Linear Pendulum h =0.01')
+plt.plot(t,res_euler_,color='b', label = 'Euler')
+plt.plot(t,res_eulercromer_,color='r', label = 'Euler Cromer')
+plt.xlabel('t')
+plt.ylabel('u(t)')
+plt.legend()
+
+plt.show()
